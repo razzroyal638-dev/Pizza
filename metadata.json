@@ -1,0 +1,6 @@
+{
+  "name": "BarbieCorn Pizza Menu",
+  "description": "BarbieCorn Pizza Live Digital Menu Catalog",
+  "requestFramePermissions": ["microphone"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
