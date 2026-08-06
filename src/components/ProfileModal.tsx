@@ -4,9 +4,11 @@ import { X, User, Phone, MapPin, Hash, Lock } from 'lucide-react';
 interface ProfileModalProps {
   onClose: () => void;
   onProfileCreated: (name: string) => void;
+  userName: string | null;
+  onLogout: () => void;
 }
 
-export default function ProfileModal({ onClose, onProfileCreated }: ProfileModalProps) {
+export default function ProfileModal({ onClose, onProfileCreated, userName, onLogout }: ProfileModalProps) {
   const [activeTab, setActiveTab] = useState<'login' | 'register'>('register');
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
@@ -16,10 +18,50 @@ export default function ProfileModal({ onClose, onProfileCreated }: ProfileModal
 
   const handleSubmit = () => {
     if (activeTab === 'register') {
+      console.log("Registering...", { name, phone });
+      const userData = { name, phone, address, pincode, password };
+      localStorage.setItem('pizzaUser', JSON.stringify(userData));
       onProfileCreated(name);
+    } else {
+        console.log("Logging in...", { phone });
+        const storedData = localStorage.getItem('pizzaUser');
+        console.log("Stored data:", storedData);
+        if (storedData) {
+            const user = JSON.parse(storedData);
+            if (user.phone === phone && user.password === password) {
+                onProfileCreated(user.name);
+            } else {
+                alert("Invalid phone or password");
+                return;
+            }
+        } else {
+            alert("No user registered");
+            return;
+        }
     }
+    setName('');
+    setPhone('');
+    setAddress('');
+    setPincode('');
+    setPassword('');
     onClose();
   };
+
+  if (userName) {
+    return (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+            <div className="bg-white rounded-2xl w-full max-w-md shadow-2xl p-6 text-center">
+                <h2 className="text-2xl font-bold mb-4">Hello, {userName}!</h2>
+                <button 
+                    onClick={() => { onLogout(); onClose(); }}
+                    className="w-full bg-red-600 text-white py-3 rounded-xl font-bold hover:bg-red-700 transition"
+                >
+                    Logout
+                </button>
+            </div>
+        </div>
+    )
+  }
 
   return (
     <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">

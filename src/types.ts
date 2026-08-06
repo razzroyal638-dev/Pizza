@@ -6,6 +6,7 @@ export interface MenuItem {
   medium: string;
   large: string;
   single: string;
+  'image Sq id'?: string;
 }
 
 export interface CartItem {

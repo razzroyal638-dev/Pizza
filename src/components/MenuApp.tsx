@@ -223,7 +223,7 @@ export default function MenuApp() {
                 </div>
             )}
         </div>
-        {isProfileOpen && <ProfileModal onClose={() => setIsProfileOpen(false)} onProfileCreated={setUserName} />}
+        {isProfileOpen && <ProfileModal onClose={() => setIsProfileOpen(false)} onProfileCreated={setUserName} userName={userName} onLogout={handleLogout} />}
         {isCartOpen && <CartModal cart={cart} onClose={() => setIsCartOpen(false)} onRemove={removeFromCart} />}
         {isAIOpen && <AIAssistantModal menuData={menuData} onClose={() => setIsAIOpen(false)} onItemClick={(name, variant, price) => {
             addToCart(name, variant, price);
@@ -280,7 +280,7 @@ export default function MenuApp() {
             </button>
             <button onClick={() => setIsProfileOpen(true)} className="flex flex-col items-center gap-1 text-gray-500 hover:text-red-700">
                 <User size={24} />
-                <span className="text-xs font-semibold">Profile</span>
+                <span className="text-xs font-semibold">{userName || "Profile"}</span>
             </button>
         </motion.nav>
     </div>
