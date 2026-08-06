@@ -7,6 +7,8 @@ export interface MenuItem {
   large: string;
   single: string;
   'image Sq id'?: string;
+  imageSqId?: string;
+  H?: string;
 }
 
 export interface CartItem {

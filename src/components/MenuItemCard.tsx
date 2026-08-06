@@ -19,14 +19,25 @@ export default function MenuItemCard({ item, onAddToCart }: MenuItemCardProps) {
   return (
     <div className="bg-white rounded-xl shadow-sm p-6 border-t-4 border-red-700 hover:shadow-md transition flex flex-col justify-between">
       <div>
-        {item['image Sq id'] && (
-          <img 
-            src={`https://raw.githubusercontent.com/razzroyal638-dev/Pizza/main/${item['image Sq id']?.trim()}`} 
-            alt={item.name} 
-            className="w-full h-40 object-cover rounded-lg mb-4"
-            onError={(e) => { e.currentTarget.style.display = 'none'; }}
-          />
-        )}
+        {(() => {
+          const imageName = (item['image Sq id'] || item['imageSqId'] || item['H'] || '').toString().trim();
+          const imageUrl = imageName ? `https://raw.githubusercontent.com/razzroyal638-dev/Pizza/main/${imageName}` : '';
+          console.log('Parsed Image:', imageName, 'URL:', imageUrl);
+
+          return (
+            <img 
+              src={imageUrl} 
+              alt={item.name || 'Menu Item'} 
+              style={{
+                width: '100%',
+                height: '180px',
+                objectFit: 'cover',
+                display: imageUrl ? 'block' : 'none'
+              }}
+              onError={(e) => { e.currentTarget.style.display = 'none'; }}
+            />
+          );
+        })()}
         <span className="inline-block bg-orange-100 text-orange-800 text-xs font-bold px-2 py-1 rounded uppercase mb-2">{item.category}</span>
         <h3 className="text-xl font-semibold mb-2">{item.name}</h3>
         <p className="text-sm text-gray-600 mb-4">{item.description || 'Fresh & tasty'}</p>

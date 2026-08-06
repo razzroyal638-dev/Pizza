@@ -118,7 +118,8 @@ export default function MenuApp() {
           regular: values[3] || '',
           medium: values[4] || '',
           large: values[5] || '',
-          single: values[6] || ''
+          single: values[6] || '',
+          'image Sq id': values[7] || ''
         });
       }
     }
