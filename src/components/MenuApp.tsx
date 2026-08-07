@@ -261,6 +261,16 @@ export default function MenuApp() {
                         <Instagram size={28} />
                     </a>
                 </div>
+                <div className="mt-4">
+                    <a 
+                        href="https://barbiecornpizza.lovable.app" 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="bg-red-600 text-white px-6 py-2 rounded-full font-bold hover:bg-red-700 transition inline-block"
+                    >
+                        Download App
+                    </a>
+                </div>
                 <div className="text-gray-600 mt-2 text-sm max-w-sm px-4">
                     <a 
                         href="https://www.google.com/maps/search/?api=1&query=Sargam+Rd,+opposite+Sargam+Theatre,+Siau,+Chandpur,+Uttar+Pradesh+246725" 
