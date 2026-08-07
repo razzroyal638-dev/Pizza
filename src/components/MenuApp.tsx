@@ -76,12 +76,18 @@ export default function MenuApp() {
           .map((result: any) => result[0].transcript)
           .join('');
         console.log("Transcript:", transcript);
-        setSearchTerm(transcript);
+        // Replace commas, plus signs, and periods with spaces, then trim
+        setSearchTerm(transcript.replace(/[,\+\.]/g, ' ').trim());
     };
     
     recognition.onerror = (event: any) => {
         console.error("Speech recognition error", event.error);
         setIsListening(false);
+        if (event.error === 'not-allowed') {
+            alert("Microphone permission denied. Please enable it in your browser settings to use voice search.");
+        } else {
+            alert("Speech recognition error: " + event.error);
+        }
     };
     
     recognition.start();
@@ -129,8 +135,16 @@ export default function MenuApp() {
   
   const filteredData = menuData.filter(item => {
     const matchesCat = (activeCategory === 'ALL' || item.category === activeCategory);
-    const matchesSearch = item.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                          item.description.toLowerCase().includes(searchTerm.toLowerCase());
+    
+    // Split search term into keywords
+    const keywords = searchTerm.toLowerCase().split(/\s+/).filter(Boolean);
+    
+    // Check if any keyword matches name or description (OR logic for keywords)
+    const matchesSearch = keywords.length === 0 || keywords.some(keyword => 
+        item.name.toLowerCase().includes(keyword) || 
+        item.description.toLowerCase().includes(keyword)
+    );
+    
     return matchesCat && matchesSearch;
   });
 

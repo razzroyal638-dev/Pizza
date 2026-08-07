@@ -12,7 +12,7 @@ export default function CartModal({ cart, onClose, onRemove }: CartModalProps) {
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [address, setAddress] = useState('');
-  const [orderType, setOrderType] = useState<'Dine-In' | 'Takeaway' | 'Home Delivery'>('Home Delivery');
+  const [orderType, setOrderType] = useState<'Home Delivery'>('Home Delivery');
 
   useEffect(() => {
     const storedData = localStorage.getItem('pizzaUser');
@@ -44,15 +44,11 @@ export default function CartModal({ cart, onClose, onRemove }: CartModalProps) {
         <div className="space-y-4 mb-6">
           <label className="block text-sm font-medium text-gray-700">Order Type</label>
           <div className="flex gap-2">
-            {(['Dine-In', 'Takeaway', 'Home Delivery'] as const).map(type => (
-              <button 
-                key={type}
-                onClick={() => setOrderType(type)}
-                className={`flex-1 py-2 rounded-lg text-sm font-semibold border ${orderType === type ? 'bg-orange-100 border-orange-500 text-orange-700' : 'bg-gray-50 border-gray-200'}`}
-              >
-                {type}
-              </button>
-            ))}
+            <button 
+                className="flex-1 py-2 rounded-lg text-sm font-semibold border bg-orange-100 border-orange-500 text-orange-700"
+            >
+                Home Delivery
+            </button>
           </div>
           <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="Customer Name *" className="w-full p-3 rounded-xl border border-gray-300" />
           <input type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="Mobile Number *" className="w-full p-3 rounded-xl border border-gray-300" />
