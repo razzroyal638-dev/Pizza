@@ -3,8 +3,7 @@ import { motion } from 'motion/react';
 import ProfileModal from './ProfileModal';
 import MenuItemCard from './MenuItemCard';
 import CartModal from './CartModal';
-import AIAssistantModal from './AIAssistantModal';
-import { User, ShoppingCart, Home, ShoppingBag, Phone, MessageSquare, Sparkles, Search, ArrowLeft, Mic } from 'lucide-react';
+import { User, ShoppingCart, Home, Phone, MessageSquare, Search, ArrowLeft, Mic, ChevronUp, ChevronDown, Instagram, Facebook } from 'lucide-react';
 import { MenuItem, CartItem } from '../types';
 
 // Interfaces
@@ -20,7 +19,6 @@ export default function MenuApp() {
   const [activeCategory, setActiveCategory] = useState('ALL');
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
-  const [isAIOpen, setIsAIOpen] = useState(false);
   const [userName, setUserName] = useState<string | null>(null);
   const [cart, setCart] = useState<CartItem[]>([]);
 
@@ -226,22 +224,25 @@ export default function MenuApp() {
         </div>
         {isProfileOpen && <ProfileModal onClose={() => setIsProfileOpen(false)} onProfileCreated={setUserName} userName={userName} onLogout={handleLogout} />}
         {isCartOpen && <CartModal cart={cart} onClose={() => setIsCartOpen(false)} onRemove={removeFromCart} />}
-        {isAIOpen && <AIAssistantModal menuData={menuData} onClose={() => setIsAIOpen(false)} onItemClick={(name, variant, price) => {
-            addToCart(name, variant, price);
-            setIsAIOpen(false);
-            setIsCartOpen(true);
-        }} />}
         
-        {/* AI Assistant FAB */}
-        <button 
-          onClick={() => setIsAIOpen(true)}
-          className="fixed bottom-24 right-6 bg-green-600 text-white p-4 rounded-full shadow-xl hover:bg-green-700 transition z-40"
-        >
-            <Sparkles size={28} />
-        </button>
+        {/* Top/Bottom scroll buttons */}
+        <div className="fixed right-4 bottom-32 flex flex-col gap-2 z-40">
+            <button 
+                onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+                className="bg-white p-2 rounded-full shadow-lg border border-blue-900 text-gray-700 hover:bg-gray-100"
+            >
+                <ChevronUp size={24} />
+            </button>
+            <button 
+                onClick={() => window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' })}
+                className="bg-white p-2 rounded-full shadow-lg border border-blue-900 text-gray-700 hover:bg-gray-100"
+            >
+                <ChevronDown size={24} />
+            </button>
+        </div>
         
         {/* Contact Section */}
-        <div className="text-center py-8 pb-24">
+        <div className="text-center py-8 my-8 mx-4 bg-blue-50 border-2 border-blue-900 rounded-2xl shadow-lg">
             <h2 className="text-xl font-bold mb-4">Contact Us</h2>
             <div className="flex flex-col items-center gap-4">
                 <a href="tel:+919719944469" className="flex items-center gap-2 bg-gray-100 px-4 py-2 rounded-full hover:bg-gray-200 transition">
@@ -252,6 +253,14 @@ export default function MenuApp() {
                     <MessageSquare size={18} />
                     <span>WhatsApp Us</span>
                 </a>
+                <div className="flex justify-center gap-4 mt-2">
+                    <a href="#" className="text-blue-900 hover:text-blue-700">
+                        <Facebook size={28} />
+                    </a>
+                    <a href="#" className="text-pink-600 hover:text-pink-400">
+                        <Instagram size={28} />
+                    </a>
+                </div>
                 <div className="text-gray-600 mt-2 text-sm max-w-sm px-4">
                     <a 
                         href="https://www.google.com/maps/search/?api=1&query=Sargam+Rd,+opposite+Sargam+Theatre,+Siau,+Chandpur,+Uttar+Pradesh+246725" 
@@ -269,20 +278,22 @@ export default function MenuApp() {
         <motion.nav 
             initial={{ y: 100 }}
             animate={{ y: 0 }}
-            className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-3 flex justify-around items-center shadow-lg z-40"
+            className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-2 flex justify-around items-center shadow-lg z-50 px-4"
         >
-            <button className="flex flex-col items-center gap-1 text-red-700">
-                <Home size={24} />
-                <span className="text-xs font-semibold">Home</span>
-            </button>
-            <button onClick={() => setIsCartOpen(true)} className="flex flex-col items-center gap-1 text-gray-500 hover:text-red-700">
-                <ShoppingBag size={24} />
-                <span className="text-xs font-semibold">Cart</span>
-            </button>
-            <button onClick={() => setIsProfileOpen(true)} className="flex flex-col items-center gap-1 text-gray-500 hover:text-red-700">
-                <User size={24} />
-                <span className="text-xs font-semibold">{userName || "Profile"}</span>
-            </button>
+            {[
+                { name: 'Home', icon: Home, action: () => { setActiveCategory('ALL'); window.scrollTo({ top: 0, behavior: 'smooth' }); } },
+                { name: 'Cart', icon: ShoppingCart, action: () => setIsCartOpen(true) },
+                { name: 'Profile', icon: User, action: () => setIsProfileOpen(true) }
+            ].map((item) => (
+                <button 
+                    key={item.name} 
+                    onClick={item.action} 
+                    className="flex flex-col items-center gap-1 text-gray-500 hover:text-red-700 p-2"
+                >
+                    <item.icon size={22} />
+                    <span className="text-[10px] font-semibold">{item.name}</span>
+                </button>
+            ))}
         </motion.nav>
     </div>
   );
