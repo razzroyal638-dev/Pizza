@@ -3,7 +3,7 @@ import { motion } from 'motion/react';
 import ProfileModal from './ProfileModal';
 import MenuItemCard from './MenuItemCard';
 import CartModal from './CartModal';
-import { User, ShoppingCart, Home, Phone, MessageSquare, Search, ArrowLeft, Mic, ChevronUp, ChevronDown, Instagram, Facebook } from 'lucide-react';
+import { User, ShoppingCart, Home, Phone, MessageSquare, Search, ArrowLeft, Mic, ChevronUp, ChevronDown, Instagram, Facebook, Check, X } from 'lucide-react';
 import { MenuItem, CartItem } from '../types';
 
 // Interfaces
@@ -21,6 +21,7 @@ export default function MenuApp() {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [userName, setUserName] = useState<string | null>(null);
   const [cart, setCart] = useState<CartItem[]>([]);
+  const [addedItem, setAddedItem] = useState<{name: string, price: string} | null>(null);
 
   useEffect(() => {
     // Check localStorage
@@ -51,6 +52,8 @@ export default function MenuApp() {
 
   const addToCart = (name: string, variant: string, price: string) => {
     setCart([...cart, { id: Date.now().toString(), name, variant, price }]);
+    setAddedItem({ name, price });
+    setTimeout(() => setAddedItem(null), 3000); // Hide after 3s
   };
 
   const removeFromCart = (id: string) => {
@@ -83,9 +86,7 @@ export default function MenuApp() {
     recognition.onerror = (event: any) => {
         console.error("Speech recognition error", event.error);
         setIsListening(false);
-        if (event.error === 'not-allowed') {
-            alert("Microphone permission denied. Please enable it in your browser settings to use voice search.");
-        } else {
+        if (event.error !== 'not-allowed') {
             alert("Speech recognition error: " + event.error);
         }
     };
@@ -153,9 +154,9 @@ export default function MenuApp() {
         <header className="bg-red-950 text-white shadow-2xl relative border-b-4 border-yellow-600 overflow-hidden">
             <div className="absolute inset-0 z-0">
                 <img 
-                    src="https://images.unsplash.com/photo-1513104890138-7c749659a591?q=80&w=1920&auto=format&fit=crop" 
-                    alt="Delicious Pizza Background" 
-                    className="w-full h-full object-cover opacity-30"
+                    src="https://lh3.googleusercontent.com/d/1bqwSLux6wDVAEovdG0N784UTS9ZzLtTW" 
+                    alt="3D Pizza Background" 
+                    className="w-full h-full object-cover opacity-100"
                     referrerPolicy="no-referrer"
                 />
                 {/* Subtle overlay for depth */}
@@ -170,14 +171,7 @@ export default function MenuApp() {
                         <ArrowLeft size={24} />
                     </button>
                 </div>
-                <div className="absolute top-4 right-4">
-                    <button 
-                        onClick={() => setIsProfileOpen(true)}
-                        className="bg-yellow-600 text-red-950 font-bold px-4 py-1.5 rounded-full text-xs uppercase tracking-widest hover:bg-yellow-500 transition shadow-[0_4px_0_rgb(180,83,9)] active:shadow-none active:translate-y-[4px]"
-                    >
-                        Premium Login
-                    </button>
-                </div>
+
                 <motion.h1 
                     initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}
@@ -239,6 +233,30 @@ export default function MenuApp() {
         {isProfileOpen && <ProfileModal onClose={() => setIsProfileOpen(false)} onProfileCreated={setUserName} userName={userName} onLogout={handleLogout} />}
         {isCartOpen && <CartModal cart={cart} onClose={() => setIsCartOpen(false)} onRemove={removeFromCart} />}
         
+        {addedItem && (
+            <motion.div 
+                initial={{ y: 100, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                exit={{ y: 100, opacity: 0 }}
+                className="fixed bottom-20 left-4 right-4 bg-gray-900 text-white p-4 rounded-xl shadow-2xl z-50 flex items-center justify-between border-2 border-teal-500"
+            >
+                <div className="flex items-center gap-3">
+                    <div className="bg-teal-500 rounded-full p-1">
+                        <Check size={16} className="text-white" />
+                    </div>
+                    <div>
+                        <p className="font-bold text-sm text-teal-400">YOUR ITEM IN CART!</p>
+                        <p className="font-semibold text-sm">{addedItem.name}</p>
+                        <p className="text-xs text-gray-400">₹{addedItem.price}</p>
+                    </div>
+                </div>
+                <div className="flex items-center gap-4">
+                    <button onClick={() => { setIsCartOpen(true); setAddedItem(null); }} className="text-teal-400 font-bold uppercase text-sm">View Cart</button>
+                    <button onClick={() => setAddedItem(null)}><X size={20} /></button>
+                </div>
+            </motion.div>
+        )}
+
         {/* Top/Bottom scroll buttons */}
         <div className="fixed right-4 bottom-32 flex flex-col gap-2 z-40">
             <button 
