@@ -333,7 +333,7 @@ export default function MenuApp() {
                     className="flex flex-col items-center gap-1 text-gray-500 hover:text-red-700 p-2"
                 >
                     <item.icon size={22} />
-                    <span className="text-[10px] font-semibold">{item.name}</span>
+                    <span className="text-[10px] font-semibold">{item.name === 'Profile' && userName ? userName : item.name}</span>
                 </button>
             ))}
         </motion.nav>
